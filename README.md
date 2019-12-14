@@ -1,3 +1,14 @@
+This is a groupproject completed during my Masterstudies at Imperial College submitted the 13/12/2019.
+The inital commit of this repository is the submitted version. Any later commits have been added after submission.
+
+Contributers to initial commit:
+
+Sotiris Gkoulimaris
+Helen Situ
+Jiabo Wang
+Qing Ma
+Nikolas Vornehm 
+
 # ACSE-4-armageddon
 
 Asteroids entering Earth’s atmosphere are subject to extreme drag forces that decelerate, heat and disrupt the space rocks. The fate of an asteroid is a complex function of its initial mass, speed, trajectory angle and internal strength. 
