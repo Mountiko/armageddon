@@ -203,6 +203,7 @@ class Planet():
             ``velocity``, ``mass``, ``angle``, ``altitude``,
             ``distance``, ``radius``, ``time``
         """
+        assert velocity >= 0, 'no negative velocity allowed'
         num_scheme_dict = {
             'EE': self.explicit_euler,
             'IE': self.implicit_euler,
@@ -214,6 +215,8 @@ class Planet():
         if radians is False: # converts degrees to radians
             angle = angle * (np.pi)/180
 
+        assert angle <= np.pi and angle >= 0, 'Invalid entry for angle. Valid entries are values between 0 and 90 degrees'
+
         T = 12000 # max duration of simulation in seconds
         T_arr = [] # list to store the all timesteps
         t = 0 # inital time assumed to be zero
@@ -222,7 +225,7 @@ class Planet():
         mass = density * 4/3 * radius**3 * np.pi # defining the mass of astroid assuming a sphere shape
         init_distance = 0 # intial distance assumed to be zero
         y = np.array([velocity, mass, angle, init_altitude, init_distance, radius]) # defining initial condition array
-     
+    
         Y = [] # empty list to store solution array for every timestep
         Y.append(y) # store initial condition
         while t <= T: # initiate timeloop
@@ -240,12 +243,13 @@ class Planet():
             if y_next[1] <= 0 or y_next[3] <= 0: # stop simulation if mass or altitude become zero
                 break
             
+            assert (y_next[1] - y[1]) < 0, 'Simulation failed, entry values are suitable for mathematical model'
+
             t += dt
             T_arr.append(t) # store new timestep
 
             Y.append(y_next) #store caomputed values
             y = y_next
-
         Y = np.array(Y)
 
         if radians is False:

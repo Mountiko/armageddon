@@ -5,14 +5,16 @@ from analytical import anal_sol
 import time
 import scipy_test
 from asteroid_par import parse_data
+import dask
 
-#earth = Planet(g=0, Cl=0, Ch=0)
+earth = Planet()
+
+df, out = earth.impact(10, 20e3, 3000, 1e5, angle=0)
+
+print(df)
+earth.plot_results(df)
 
 
-
-
-sci_res = scipy_test.sci_sol(5, 10e3, 1200, 10e5, 45, num_scheme='RK45', fragmentation=False, g=0, C_L=0, C_H=0, dt=0.01)
-print(sci_res)
 
 '''
 fig = plt.figure(figsize=(8, 8))
