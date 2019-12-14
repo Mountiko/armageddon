@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import pandas as pd
 
-def sci_sol(radius=10, velocity=20e3, density=3000, strength=10e5, angle=45, init_altitude=100e3, distance=0, dt=0.05, fragmentation=True, num_scheme='RK45', radians=False, C_D=1., C_H=0.1, Q=1e7, C_L=1e-3, R_p=6371e3, g=9.81, rho_0=1.2, H=8000, alpha=0.3):
+def sci_sol(radius=10, velocity=20e3, density=3000, strength=10e5, angle=45, init_altitude=100e3, distance=0, dt=0.05, tmax=1e4, fragmentation=True, num_scheme='RK45', radians=False, Cd=1., Ch=0.1, Q=1e7, Cl=1e-3, Rp=6371e3, g=9.81, rho0=1.2, H=8000, alpha=0.3):
     '''
     Solves analytical solution for meteroid impact
 
@@ -49,7 +49,7 @@ def sci_sol(radius=10, velocity=20e3, density=3000, strength=10e5, angle=45, ini
     mass = 4 / 3 * np.pi * (radius ** 3) * density
     y = np.array([velocity, mass, angle, init_altitude, distance, radius])
 
-    rho_a = lambda x: rho_0 * np.exp(-x/H)
+    rhoa = lambda x: rho0 * np.exp(-x/H)
 
     def f(self, y):
         '''
@@ -61,18 +61,17 @@ def sci_sol(radius=10, velocity=20e3, density=3000, strength=10e5, angle=45, ini
         5: radius
         '''
         f = np.zeros_like(y)
-        f[0] = - (C_D * rho_a(y[3]) * y[0]**2 * np.pi * y[5]**2) / (2 * y[1]) + (g * np.sin(y[2]))
-        f[1] = - (C_H * rho_a(y[3]) * np.pi * y[5]**2 * y[0]**3) / (2 * Q)
-        f[2] = g * np.cos(y[2]) / y[0]  - (C_L * rho_a(y[3]) * np.pi * y[5]**2 * y[0]) / (2 * y[1]) - (y[0] * np.cos(y[2])) / (R_p + y[3])
+        f[0] = - (Cd * rhoa(y[3]) * y[0]**2 * np.pi * y[5]**2) / (2 * y[1]) + (g * np.sin(y[2]))
+        f[1] = - (C_H * rhoa(y[3]) * np.pi * y[5]**2 * y[0]**3) / (2 * Q)
+        f[2] = g * np.cos(y[2]) / y[0]  - (Cl * rhoa(y[3]) * np.pi * y[5]**2 * y[0]) / (2 * y[1]) - (y[0] * np.cos(y[2])) / (Rp + y[3])
         f[3] = - y[0] * np.sin(y[2])
-        f[4] = (y[0] * np.cos(y[2])) / (1 + y[3] / R_p)
-        if fragmentation == True and strength <= (rho_a(y[3]) * y[0]**2):
-            f[5] = np.sqrt(7/2 * alpha * rho_a(y[3]) / density) * y[0]
+        f[4] = (y[0] * np.cos(y[2])) / (1 + y[3] / Rp)
+        if fragmentation == True and strength <= (rhoa(y[3]) * y[0]**2):
+            f[5] = np.sqrt(7/2 * alpha * rhoa(y[3]) / density) * y[0]
         else:
             f[5] = 0
         return f
     
-    tmax = 12000
     t = np.arange(0, tmax, dt)
     result = solve_ivp(f, [0, tmax], y, method=num_scheme, t_eval=t)
     result = result.y
