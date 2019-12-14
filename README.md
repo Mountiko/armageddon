@@ -3,11 +3,11 @@ The inital commit of this repository is the submitted version. Any later commits
 
 Contributers to initial commit:
 
-Sotiris Gkoulimaris
-Helen Situ
-Jiabo Wang
-Qing Ma
-Nikolas Vornehm 
+Sotiris Gkoulimaris,
+Helen Situ,
+Jiabo Wang,
+Qing Ma,
+Nikolas Vornehm,
 
 # ACSE-4-armageddon
 
